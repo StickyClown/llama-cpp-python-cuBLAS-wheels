@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag of llama-cpp-python to build: v0.2.14'
-        default: 'v0.2.14'
+        description: 'Version tag of llama-cpp-python to build:v0.3.7'
+        default: 'v0.3.7'
         required: true
         type: string
       config:
@@ -21,8 +21,8 @@ on:
   workflow_call:
     inputs:
       version:
-        description: 'Version tag of llama-cpp-python to build: v0.2.14'
-        default: 'v0.2.14'
+        description: 'Version tag of llama-cpp-python to build: v0.3.7'
+        default: 'v0.3.7'
         required: true
         type: string
       config:
@@ -59,7 +59,7 @@ jobs:
           $matrix = @{
               'os' = 'ubuntu-20.04', 'windows-2019'
               'pyver' = "3.11", "3.10"
-              'avx' = "AVX", "AVX2"
+              'avx' = "AVX", "basic"
           }
           
           if ($env:CONFIGIN -ne 'Default') {$env:CONFIGIN.split(';').foreach({$matrix[$_.split(':')[0]] = $_.split(':')[1].split(',')})}
@@ -136,8 +136,9 @@ jobs:
           make_latest: false
           overwrite: true
         
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: steps.upload-release.outcome == 'failure'
         with:
-          name: cpu
+          name: cpu-${{ matrix.runs-on }}
           path: ./dist/*.whl
+          if-no-files-found: error
