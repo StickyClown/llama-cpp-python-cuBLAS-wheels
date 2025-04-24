@@ -57,10 +57,10 @@ jobs:
         id: set-matrix
         run: |
           $matrix = @{
-              'os' = @('ubuntu-22.04', 'windows-2019')
+              'os' = @('ubuntu-22.04')
               'pyver' = @("3.11")
               'cuda' = @("12.4.1")
-              'avxver' = @("AVX2", "AVX")
+              'avxver' = @("basic", "AVX")
           }
 
           if ($env:CONFIGIN -ne 'Default') {$env:CONFIGIN.split(';').foreach({$matrix[$_.split(':')[0]] = $_.split(':')[1].split(',')})}
